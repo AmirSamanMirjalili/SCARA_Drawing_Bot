@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mujoco>
+    <compiler angle="radian" />
+    
+    <option gravity="0 0 -9.81" />
+    
+    <asset>
+        <!-- Materials with metallic and plastic appearances -->
+        <material name="metal" rgba="0.7 0.7 0.7 1" shininess="0.8" specular="0.7"/>
+        <material name="robot_blue" rgba="0.1 0.3 0.7 1" shininess="0.5" specular="0.5"/>
+        <material name="joint_color" rgba="0.5 0.5 0.5 1" shininess="0.8" specular="0.6"/>
+        <material name="end_effector" rgba="0.8 0.2 0.2 1" shininess="0.5" specular="0.5"/>
+        <material name="floor" rgba="0.9 0.9 0.9 1" shininess="0.1" specular="0.2"/>
+        
+        <!-- Textures for more realistic appearance -->
+        <texture name="grid" type="2d" builtin="checker" rgb1="0.1 0.2 0.3" rgb2="0.2 0.3 0.4" 
+                 width="300" height="300" mark="edge" markrgb="0.2 0.3 0.4"/>
+        <material name="grid" texture="grid" texrepeat="5 5" texuniform="true"/>
+    </asset>
+
+    <visual>
+        <headlight ambient="0.4 0.4 0.4" diffuse="0.8 0.8 0.8" specular="0.1 0.1 0.1"/>
+        <map shadowclip="0.5"/>
+        <quality shadowsize="4096"/>
+    </visual>
+
+    <worldbody>
+        <!-- Fixed base with more detailed geometry -->
+        <light pos="0 0 3" dir="0 0 -1" directional="true"/>
+        <body name="base" pos="0 0 0">
+            <!-- Base plate -->
+            <geom type="cylinder" size="0.15 0.02" material="metal"/>
+            <!-- Central column -->
+            <geom type="cylinder" size="0.08 0.08" pos="0 0 0.08" material="metal"/>
+            
+            <!-- First link -->
+            <body name="link1" pos="0 0 0.16">
+                <joint name="joint1" type="hinge" axis="0 0 1" damping="0.05"/>
+                <!-- Joint housing -->
+                <geom type="cylinder" size="0.06 0.04" material="joint_color"/>
+                <!-- Arm -->
+                <geom type="capsule" size="0.04 0.2" pos="0.2 0 0" quat="0.707 0 0.707 0" material="robot_blue"/>
+                <!-- Joint end -->
+                <geom type="sphere" size="0.045" pos="0.4 0 0" material="joint_color"/>
+                
+                <!-- Second link -->
+                <body name="link2" pos="0.4 0 0">
+                    <joint name="joint2" type="hinge" axis="0 0 1" damping="0.05"/>
+                    <!-- Joint housing -->
+                    <geom type="cylinder" size="0.05 0.04" material="joint_color"/>
+                    <!-- Arm -->
+                    <geom type="capsule" size="0.035 0.18" pos="0.2 0 0" quat="0.707 0 0.707 0" material="robot_blue"/>
+                    <!-- Joint end -->
+                    <geom type="sphere" size="0.04" pos="0.4 0 0" material="joint_color"/>
+                    
+                    <!-- End effector -->
+                    <body name="end_effector" pos="0.4 0 0">
+                        <!-- Modified joint3 configuration -->
+                        <joint name="joint3" type="slide" axis="0 0 1" range="-0.2 0" damping="0.05" armature="0.05"/>
+                        <!-- Sliding mechanism -->
+                        <geom type="cylinder" size="0.02 0.1" material="metal"/>
+                        <!-- Tool tip -->
+                        <geom type="sphere" size="0.02" pos="0 0 -0.1" material="end_effector"/>
+                    </body>
+                </body>
+            </body>
+        </body>
+
+        <!-- Enhanced ground plane -->
+        <geom type="plane" size="3 3 0.1" material="grid"/>
+    </worldbody>
+
+    <actuator>
+        <position joint="joint1" name="pos1" kp="100" kv="20" ctrlrange="-3.14159 3.14159"/>
+        <position joint="joint2" name="pos2" kp="100" kv="20" ctrlrange="-3.14159 3.14159"/>
+        <position joint="joint3" name="pos3" kp="100" kv="20" ctrlrange="-0.2 0"/>
+    </actuator>
+
+    <!-- Add contact pairs for better physics -->
+    <contact>
+        <exclude body1="link1" body2="base"/>
+        <exclude body1="link2" body2="link1"/>
+        <exclude body1="end_effector" body2="link2"/>
+    </contact>
+</mujoco> 

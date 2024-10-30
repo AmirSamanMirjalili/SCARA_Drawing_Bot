@@ -1,0 +1,33 @@
+# Virtual Environment
+scara_env/
+venv/
+env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Generated DXF files
+*.dxf
+
+# MuJoCo specific
+MUJOCO_LOG.TXT
+
+# System specific
+.DS_Store
+Thumbs.db
+
+# Keep the model file
+!models/scara_robot.xml
