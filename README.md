@@ -2,6 +2,9 @@
 
 This project implements a SCARA robot simulator that can draw text using MuJoCo physics engine. The robot follows paths defined in DXF files to write text on a virtual surface.
 
+![image](https://github.com/user-attachments/assets/b9112695-fa58-4438-941c-b78862ea359c)
+
+
 ⚠️ **Note: This project is currently in development. Path following has known issues and character support is limited.**
 
 ## Current Status
